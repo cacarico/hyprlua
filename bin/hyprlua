@@ -38,7 +38,7 @@ local function main()
 	-- Initialize argument parser
 	local parser = argparse("hyprlua", "Generate Hyprland configuration using Lua scripts.")
 
-	parser:option("-c --config", "Path to the config.lua file"):args(1):default("config.lua")
+	parser:option("-c --config", "Path to the config.lua file"):args(1):default("hyprland.lua")
 
 	parser:option("-o --output", "Path to the output hyprland.conf file"):args(1):default("hyprland.conf")
 

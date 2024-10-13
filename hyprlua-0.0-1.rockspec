@@ -2,7 +2,7 @@ package = "hyprlua"
 version = "0.0-1"
 source = {
     url = "git://github.com/cacarico/hyprlua.git",
-    tag = "v0.0.1",
+    tag = "v0.1",
 }
 description = {
     summary = "A CLI tool for generating Hyprland configurations using Lua.",
