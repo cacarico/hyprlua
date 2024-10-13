@@ -1,0 +1,110 @@
+#!/usr/bin/env lua
+
+-- bin/hyprlua
+-- Hyprlua CLI: Generate Hyprland configuration using Lua scripts.
+
+local argparse = require("argparse")
+local hyprlua = require("hyprlua")
+
+-- ANSI color codes for enhanced terminal output
+local colors = {
+	reset = "\27[0m",
+	red = "\27[31m",
+	green = "\27[32m",
+	yellow = "\27[33m",
+	blue = "\27[34m",
+	magenta = "\27[35m",
+	cyan = "\27[36m",
+	white = "\27[37m",
+}
+
+-- Helper function to print colored messages
+local function print_colored(color, message)
+	print(color .. message .. colors.reset)
+end
+
+-- Helper function to check if a file exists and is readable
+local function file_exists(path)
+	local file = io.open(path, "r")
+	if file then
+		file:close()
+		return true
+	end
+	return false
+end
+
+-- Main function encapsulating CLI logic
+local function main()
+	-- Initialize argument parser
+	local parser = argparse("hyprlua", "Generate Hyprland configuration using Lua scripts.")
+
+	parser:option("-c --config", "Path to the config.lua file"):args(1):default("config.lua")
+
+	parser:option("-o --output", "Path to the output hyprland.conf file"):args(1):default("hyprland.conf")
+
+	parser:flag("-v --verbose", "Enable verbose output")
+
+	parser:flag("-h --help", "Show help message")
+
+	-- Parse arguments
+	local args = parser:parse()
+
+	local config_file = args.config
+	local output_file = args.output
+	local verbose = args.verbose
+
+	-- Verbose logging function
+	local function log_verbose(message)
+		if verbose then
+			print_colored(colors.cyan, "[Verbose] " .. message)
+		end
+	end
+
+	-- Validate config file existence
+	if not file_exists(config_file) then
+		print_colored(colors.red, string.format("Error: Configuration file '%s' does not exist.", config_file))
+		os.exit(1)
+	end
+	log_verbose(string.format("Found configuration file: %s", config_file))
+
+	-- Define custom environment for config.lua
+	local env = {
+		hyprlua = hyprlua,
+		print = print, -- Allow print statements in config.lua
+	}
+
+	-- Load config.lua as a chunk with the custom environment
+	local chunk, load_err = loadfile(config_file, "bt", env)
+	if not chunk then
+		print_colored(colors.red, string.format("Error loading config file: %s", load_err))
+		os.exit(1)
+	end
+	log_verbose("Successfully loaded config.lua")
+
+	-- Execute the chunk within a protected call
+	local success, exec_err = pcall(chunk)
+	if not success then
+		print_colored(colors.red, string.format("Error executing config file: %s", exec_err))
+		os.exit(1)
+	end
+	log_verbose("Successfully executed config.lua")
+
+	-- Write the configuration to the output file
+	local write_success, write_err = hyprlua.writeToFile(output_file)
+	if not write_success then
+		print_colored(colors.red, string.format("Error writing configuration: %s", write_err))
+		os.exit(1)
+	end
+	log_verbose(string.format("Configuration written to '%s'", output_file))
+
+	-- Success message
+	print_colored(colors.green, string.format("Hyprland configuration generated successfully at '%s'.", output_file))
+end
+
+-- Execute main function within a protected call to handle unforeseen errors
+local status, err = pcall(main)
+if not status then
+	print_colored(colors.red, "An unexpected error occurred:")
+	print_colored(colors.red, err)
+	os.exit(1)
+end
