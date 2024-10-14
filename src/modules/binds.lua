@@ -8,33 +8,6 @@ binds.list = {}
 
 -- NOTE: Maybe remove this and use string instead
 
--- Flag definitions with dual access
-binds.flags = {
-	-- Descriptive names
-	LOCKED = "l",
-	RELEASE = "r",
-	REPEAT = "e",
-	NON_CONSUMING = "n",
-	MOUSE = "m",
-	TRANSPARENT = "t",
-	IGNORE_MODS = "i",
-	SEPARATE = "s",
-	DESCRIPTION = "d",
-	BYPASS_INHIBIT = "p",
-
-	-- Single-character keys
-	l = "l",
-	r = "r",
-	e = "e",
-	n = "n",
-	m = "m",
-	t = "t",
-	i = "i",
-	s = "s",
-	d = "d",
-	p = "p",
-}
-
 binds.defaultKeys = {
 	"Return",
 	"Backspace",
@@ -72,11 +45,9 @@ function binds.write(file)
 	if #binds.list > 0 then
 		file:write("# Keybindings\n")
 		for _, binding in ipairs(binds.list) do
-			local flagString = binding.flags ~= "" and binding.flags or ""
-
 			local bindLine = string.format(
 				"bind%s = %s, %s, %s, %s\n",
-				flagString,
+				binding.flags,
 				binding.modifiers,
 				binding.key,
 				binding.action,
