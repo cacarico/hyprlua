@@ -24,6 +24,6 @@ build = {
         ["hyprlua.libs.utils"] = "src/libs/utils.lua",
     },
     binaries = {
-        ["hyprlua"] = "bin/hyprlua",  -- Path to the CLI script
+        ["hyprlua"] = "bin/hyprlua",
     },
 }
