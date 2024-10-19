@@ -1,8 +1,8 @@
 package = "hyprlua"
-version = "0.0-2"
+version = "0.1-0"
 source = {
     url = "git://github.com/cacarico/hyprlua.git",
-    tag = "v0.1.2",
+    tag = "v0.1.0",
 }
 description = {
     summary = "A CLI tool for generating Hyprland configurations using Lua.",
@@ -21,7 +21,9 @@ build = {
     modules = {
         ["hyprlua"] = "src/hyprlua.lua",
         ["hyprlua.modules.binds"] = "src/modules/binds.lua",
+        ["hyprlua.modules.general"] = "src/modules/general.lua",
         ["hyprlua.libs.utils"] = "src/libs/utils.lua",
+        ["hyprlua.libs.logs"] = "src/libs/logs.lua",
     },
     binaries = {
         ["hyprlua"] = "bin/hyprlua",
