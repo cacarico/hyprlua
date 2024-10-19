@@ -15,8 +15,8 @@ function hyprlua.writeToFile(file_path)
 		return false, "Could not open file: " .. err
 	end
 
-	binds.write(file)
 	general.write(file)
+	binds.write(file)
 
 	file:close()
 	return true

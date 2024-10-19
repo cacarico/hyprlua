@@ -65,7 +65,9 @@ end
 
 function general.write(file)
   if #serialized_config > 0 then
+    file:write("# GENERAL\n")
     file:write(serialized_config)
+		file:write("\n\n")
   end
 end
 
