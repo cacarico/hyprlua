@@ -9,6 +9,7 @@ This project currently supports only the features I use from Hyprland, suggestio
 
 - [x] Support for binds
 - [ ] Support for submaps in binds
+- [x] Support for general config
 - [ ] Monitor configuration
 - [ ] Setup startup executions
 - [ ] Exec-once
