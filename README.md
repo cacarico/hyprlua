@@ -8,13 +8,31 @@ This project currently supports only the features I use from Hyprland, suggestio
 ### Currently Supported
 
 - [x] Support for binds
-- [ ] Support for submaps in binds
-- [x] Support for general config
+    - [ ] Submaps in binds
+- [x] General
 - [ ] Monitor configuration
 - [ ] Setup startup executions
 - [ ] Exec-once
 - [ ] Inputs
-- [ ] Monitors
+- [x] Monitors
+- [ ] Decoration
+- [ ] Blur
+- [ ] Animations
+- [ ] Input
+- [ ] Touchpad
+- [ ] Touchdevice
+- [ ] Tablet
+- [ ] Per-device input config
+- [ ] Gestures
+- [ ] Group
+- [ ] Groupbar
+- [ ] Misc
+- [ ] Binds
+- [ ] XWayland
+- [ ] OpenGL
+- [ ] Render
+- [ ] Cursor
+- [ ] Debug
 
 ## Using
 

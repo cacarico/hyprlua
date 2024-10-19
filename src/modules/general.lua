@@ -29,8 +29,8 @@ general.defaults = {
 function general.setup(opts)
 	opts = opts or {}
 
-  -- NOTE: Adds validation
-  --
+	-- NOTE: Adds validation
+	--
 	-- utils.validate({
 	-- 	border_size = { opts.border_size, "number" },
 	-- 	no_border_on_floating = { opts.no_border_on_floating, "boolean" },
@@ -58,17 +58,16 @@ function general.setup(opts)
 	-- end
 
 	utils.merge_tables(general.defaults, opts)
-  serialized_config = utils.serialize_config(general.defaults, "config")
-  print(serialized_config)
-
+	serialized_config = utils.serialize_config(general.defaults, "config")
+	print(serialized_config)
 end
 
 function general.write(file)
-  if #serialized_config > 0 then
-    file:write("# GENERAL\n")
-    file:write(serialized_config)
+	if #serialized_config > 0 then
+		file:write("# GENERAL\n")
+		file:write(serialized_config)
 		file:write("\n\n")
-  end
+	end
 end
 
 return general
