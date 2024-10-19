@@ -22,17 +22,7 @@ Create a hyprland.lua file
 
 
 ```lua
-hyprlua.general.setup({
-	gaps_in = 30,
-	gaps_out = 20,
-	border_size = 10,
-	col = {
-		active_border = "rgba(33ccffee) rgba(00ff99ee) 45deg",
-		inactive_border = "rgba(595959aa)",
-	},
-	resize_on_border = false,
-	allow_tearing = false,
-})
+hyprlua.general.setup()
 
 hyprlua.binds.set("SUPER SHIFT", "h", "resizeactive", "-50 0", { flags = "e" })
 hyprlua.binds.set("SUPER SHIFT", "j", "resizeactive", "0 50", { flags = "e" })
@@ -46,13 +36,13 @@ It will generate a hyprland.conf
 # GENERAL
 config {
     allow_tearing = false
-    border_size = 10
-    col.active_border = rgba(33ccffee) rgba(00ff99ee) 45deg
-    col.inactive_border = rgba(595959aa)
+    border_size = 1
+    col.active_border = 0xffffffff
+    col.inactive_border = 0xff444444
     col.nogroup_border = 0xffffaaff
     col.nogroup_border_active = 0xffff00ff
     extend_border_grab_area = 15
-    gaps_in = 30
+    gaps_in = 5
     gaps_out = 20
     gaps_workspaces = 0
     hover_icon_on_border = true
@@ -68,4 +58,5 @@ binde = SUPER SHIFT, h, resizeactive, -50 0
 binde = SUPER SHIFT, j, resizeactive, 0 50
 binde = SUPER SHIFT, k, resizeactive, 0 -50
 binde = SUPER SHIFT, l, resizeactive, 50 0
+
 ```
