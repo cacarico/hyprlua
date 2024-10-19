@@ -1,6 +1,6 @@
-# Hyprland Lua Config
+# Hyprlua
 
-Hyprland Lua Config aims to end my frustration with configuring Hyprland using its configuration file.
+Hyprlua aims to end my frustration with configuring Hyprland using its configuration file.
 
 ## Features
 This project currently supports only the features I use from Hyprland, suggestions and contributions are highly enouraged.
