@@ -1,10 +1,12 @@
 local binds = require("src.modules.binds")
+local general = require("src.modules.general")
 -- local binds = require("hyprlua.modules.binds")
 
 local hyprlua = {}
 
 -- Expose binds module
 hyprlua.binds = binds
+hyprlua.general = general
 
 -- Function to write all configurations to the file
 function hyprlua.writeToFile(file_path)
@@ -14,7 +16,7 @@ function hyprlua.writeToFile(file_path)
 	end
 
 	binds.write(file)
-	-- Add calls to other write functions if you have them, e.g., animations.write(file)
+	general.write(file)
 
 	file:close()
 	return true

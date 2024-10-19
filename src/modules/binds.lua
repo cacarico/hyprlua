@@ -1,12 +1,9 @@
 local utils = require("src.libs.utils")
--- local utils = require("hyprlua.libs.utils")
 
 local binds = {}
 
 -- Internal binds list
 binds.list = {}
-
--- NOTE: Maybe remove this and use string instead
 
 binds.defaultKeys = {
 	"Return",
@@ -20,6 +17,7 @@ binds.defaultKeys = {
 -- @param arguments (string) Arguments for the dispatcher (e.g., "firefox")
 -- @param options (table, optional) Additional options such as flags and description
 function binds.set(modifiers, key, action, arguments, options)
+	--- IMP: Add check to
 	options = options or {}
 	utils.validate({
 		modifiers = { modifiers, "string" },
