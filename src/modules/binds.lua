@@ -11,11 +11,11 @@ binds.defaultKeys = {
 }
 
 --- Adds a bind to the internal list.
--- @param modifiers (string) Modifier keys (e.g., "SUPER")
--- @param key (string) The key to bind (e.g., "Return")
--- @param action (string) The action dispatcher (e.g., "exec")
--- @param arguments (string) Arguments for the dispatcher (e.g., "firefox")
--- @param options (table, optional) Additional options such as flags and description
+--- @param modifiers (string) Modifier keys (e.g., "SUPER")
+--- @param key (string) The key to bind (e.g., "Return")
+--- @param action (string) The action dispatcher (e.g., "exec")
+--- @param arguments (string) Arguments for the dispatcher (e.g., "firefox")
+--- @param options (table) Additional options such as flags and description
 function binds.set(modifiers, key, action, arguments, options)
 	--- IMP: Add check to
 	options = options or {}
@@ -38,22 +38,22 @@ function binds.set(modifiers, key, action, arguments, options)
 end
 
 --- Writes all binds to file.
--- @param file (file) The file handle to write to
+--- @param file (file*) The file handle to write to
 function binds.write(file)
 	if #binds.list > 0 then
 		file:write("# Keybindings\n")
-		for _, binding in ipairs(binds.list) do
-			local bindLine = string.format(
+		for _, bind in ipairs(binds.list) do
+			local bind_line = string.format(
 				"bind%s = %s, %s, %s, %s\n",
-				binding.flags,
-				binding.modifiers,
-				binding.key,
-				binding.action,
-				binding.arguments
+				bind.flags,
+				bind.modifiers,
+				bind.key,
+				bind.action,
+				bind.arguments
 			)
-			file:write(bindLine)
-			if binding.description ~= "" then
-				file:write("# " .. binding.description .. "\n")
+			file:write(bind_line)
+			if bind.description ~= "" then
+				file:write("# " .. bind.description .. "\n")
 			end
 		end
 		file:write("\n")

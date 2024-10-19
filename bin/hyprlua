@@ -72,7 +72,7 @@ local function main()
 	-- log_verbose("Successfully executed config.lua")
 
 	-- Write the configuration to the output file
-	local write_success, write_err = hyprlua.writeToFile(output_file)
+	local write_success, write_err = hyprlua.write_to_file(output_file)
 	if not write_success then
 		logs.error(string.format("Error writing configuration: %s", write_err))
 		os.exit(1)
