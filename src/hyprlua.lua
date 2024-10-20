@@ -1,6 +1,6 @@
 --- Hyprlua Library
 -- This library handles everything
--- @lib hyprlua
+-- @module hyprlua
 
 local binds = require("src.modules.binds")
 local general = require("src.modules.general")

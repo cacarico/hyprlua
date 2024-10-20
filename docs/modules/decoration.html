@@ -24,7 +24,7 @@
 
 <div id="navigation">
 <br/>
-<h1>Penlight</h1>
+<h1>Hyprlua</h1>
 
 
 <ul>
@@ -34,6 +34,7 @@
 <h2>Contents</h2>
 <ul>
 <li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
 </ul>
 
 
@@ -58,7 +59,7 @@
 
 <h1>Module <code>decoration</code></h1>
 <p>Decoration Module
- This module handles decorations and blur</p>
+ This module handles decorations and blur effects.</p>
 <p></p>
 
 
@@ -66,7 +67,18 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#setup">setup (opts)</a></td>
-	<td class="summary">Setup decoration configuration</td>
+	<td class="summary">Sets up the Decoration Module with user-provided options.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#write">write (file)</a></td>
+	<td class="summary">Writes the serialized configuration to a file.</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#defaults">defaults</a></td>
+	<td class="summary">Default configuration options for the Decoration Module.</td>
 	</tr>
 </table>
 
@@ -82,13 +94,128 @@
     <strong>setup (opts)</strong>
     </dt>
     <dd>
-    Setup decoration configuration
+    Sets up the Decoration Module with user-provided options.
+<p> This function merges user-provided options with the default configuration.
+
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">opts</span>
-         (table) Table of options to apply
+         (table) A table of options to apply. See `decoration.defaults` for available options.
+        </li>
+    </ul>
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">decoration.<span class="function-name">setup</span>({
+    rounding = <span class="number">10</span>,
+    active_opacity = <span class="number">0.9</span>,
+    col = {
+        shadow = <span class="string">"0xee000000"</span>,
+    },
+})</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "write"></a>
+    <strong>write (file)</strong>
+    </dt>
+    <dd>
+    Writes the serialized configuration to a file.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">file</span>
+         (file) The file object to write the configuration to.
+        </li>
+    </ul>
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> file = <span class="global">io</span>.<span class="function-name">open</span>(<span class="string">"config.lua"</span>, <span class="string">"w"</span>)
+decoration.<span class="function-name">write</span>(file)
+file:<span class="function-name">close</span>()</pre>
+    </ul>
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "defaults"></a>
+    <strong>defaults</strong>
+    </dt>
+    <dd>
+    Default configuration options for the Decoration Module.
+ Users can override these defaults by passing a table of options to `decoration.setup`.
+
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">rounding</span>
+         number The corner rounding radius. Default is `0`.
+        </li>
+        <li><span class="parameter">active_opacity</span>
+         number Opacity when active. Range: `0.0` to `1.0`. Default is `1.0`.
+        </li>
+        <li><span class="parameter">inactive_opacity</span>
+         number Opacity when inactive. Range: `0.0` to `1.0`. Default is `1.0`.
+        </li>
+        <li><span class="parameter">fullscreen_opacity</span>
+         number Opacity in fullscreen mode. Range: `0.0` to `1.0`. Default is `1.0`.
+        </li>
+        <li><span class="parameter">drop_shadow</span>
+         boolean Enable or disable drop shadows. Default is `true`.
+        </li>
+        <li><span class="parameter">shadow_range</span>
+         number The range of the shadow effect. Default is `4`.
+        </li>
+        <li><span class="parameter">shadow_render_power</span>
+         number The power level of shadow rendering. Default is `3`.
+        </li>
+        <li><span class="parameter">shadow_ignore_window</span>
+         boolean Whether shadows should ignore window decorations. Default is `true`.
+        </li>
+        <li><span class="parameter">col</span> table Color settings for shadows.
+        <ul>
+        <li><span class="parameter">shadow</span>
+         string Hex color code for active shadows. Example: `"0xee1a1a1a"`.
+        </li>
+        <li><span class="parameter">shadow_inactive</span>
+         string Hex color code for inactive shadows. Default is `"nil"`.
+        </li>
+        </li></ul>
+        <li><span class="parameter">shadow_offset</span>
+         boolean Enable or disable shadow offsets. Default is `true`.
+        </li>
+        <li><span class="parameter">shadow_scale</span>
+         table Scaling factors for shadows. Default is `{ 0, 0 }`.
+        </li>
+        <li><span class="parameter">dim_inactive</span>
+         boolean Enable or disable dimming for inactive elements. Default is `false`.
+        </li>
+        <li><span class="parameter">dim_strength</span>
+         number Strength of the dim effect. Default is `0.5`.
+        </li>
+        <li><span class="parameter">dim_special</span>
+         number Special dimming parameter. Default is `0.2`.
+        </li>
+        <li><span class="parameter">dim_around</span>
+         number Dim amount around elements. Default is `0.4`.
+        </li>
+        <li><span class="parameter">screen_shader</span>
+         string Path or identifier for the screen shader. Default is `""`.
         </li>
     </ul>
 
@@ -104,7 +231,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
-<i style="float:right;">Last updated 2024-10-20 13:47:17 </i>
+<i style="float:right;">Last updated 2024-10-20 15:31:30 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
