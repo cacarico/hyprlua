@@ -5,6 +5,7 @@
 local binds = require("src.modules.binds")
 local general = require("src.modules.general")
 local monitors = require("src.modules.monitors")
+local decoration = require("src.modules.decoration")
 
 local hyprlua = {}
 
@@ -16,8 +17,10 @@ local hyprlua = {}
 hyprlua.binds = binds
 hyprlua.general = general
 hyprlua.monitors = monitors
+hyprlua.decoration = decoration
 
 -- Function to write all configurations to the file
+-- @param file_path (file*) A file to be saved
 function hyprlua.write_to_file(file_path)
 	local file, err = io.open(file_path, "w")
 	if not file then
@@ -25,6 +28,7 @@ function hyprlua.write_to_file(file_path)
 	end
 
 	general.write(file)
+	decoration.write(file)
 	binds.write(file)
 	monitors.write(file)
 

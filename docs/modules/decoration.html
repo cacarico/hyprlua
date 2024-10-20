@@ -39,8 +39,8 @@
 
 <h2>Modules</h2>
 <ul class="nowrap">
-  <li><strong>binds</strong></li>
-  <li><a href="../modules/decoration.html">decoration</a></li>
+  <li><a href="../modules/binds.html">binds</a></li>
+  <li><strong>decoration</strong></li>
   <li><a href="../modules/general.html">general</a></li>
   <li><a href="../modules/hyprlua.html">hyprlua</a></li>
   <li><a href="../modules/logs.html">logs</a></li>
@@ -56,21 +56,17 @@
 
 <div id="content">
 
-<h1>Module <code>binds</code></h1>
-<p>Binds Module
- This module handles binds</p>
+<h1>Module <code>decoration</code></h1>
+<p>Decoration Module
+ This module handles decorations and blur</p>
 <p></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#set">set (modifiers, key, action, arguments, options)</a></td>
-	<td class="summary">Adds a bind to the internal list.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#write">write (file)</a></td>
-	<td class="summary">Writes all binds to file.</td>
+	<td class="name" nowrap><a href="#setup">setup (opts)</a></td>
+	<td class="summary">Setup decoration configuration</td>
 	</tr>
 </table>
 
@@ -82,49 +78,17 @@
 
     <dl class="function">
     <dt>
-    <a name = "set"></a>
-    <strong>set (modifiers, key, action, arguments, options)</strong>
+    <a name = "setup"></a>
+    <strong>setup (opts)</strong>
     </dt>
     <dd>
-    Adds a bind to the internal list.
+    Setup decoration configuration
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">modifiers</span>
-         (string) Modifier keys (e.g., "SUPER")
-        </li>
-        <li><span class="parameter">key</span>
-         (string) The key to bind (e.g., "Return")
-        </li>
-        <li><span class="parameter">action</span>
-         (string) The action dispatcher (e.g., "exec")
-        </li>
-        <li><span class="parameter">arguments</span>
-         (string) Arguments for the dispatcher (e.g., "firefox")
-        </li>
-        <li><span class="parameter">options</span>
-         (table) Additional options such as flags and description
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "write"></a>
-    <strong>write (file)</strong>
-    </dt>
-    <dd>
-    Writes all binds to file.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">file</span>
-         (file*) The file handle to write to
+        <li><span class="parameter">opts</span>
+         (table) Table of options to apply
         </li>
     </ul>
 

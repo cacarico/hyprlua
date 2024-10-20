@@ -66,6 +66,8 @@ function general.setup(opts)
 	-- print(serialized_config)
 end
 
+--- Saves general config to file
+--- @param file (file*)
 function general.write(file)
 	if #serialized_config > 0 then
 		file:write("# GENERAL\n")
