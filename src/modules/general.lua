@@ -1,3 +1,7 @@
+--- General Module
+-- This module handles general configurations
+-- @module general
+
 local utils = require("src.libs.utils")
 local general = {}
 local serialized_config = {}

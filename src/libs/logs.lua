@@ -1,3 +1,7 @@
+--- Logs Module
+-- This module handles logs and colors
+-- @module logs
+
 local logs = {}
 --
 -- ANSI color codes for enhanced terminal output

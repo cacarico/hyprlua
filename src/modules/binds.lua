@@ -1,3 +1,7 @@
+--- Binds Module
+-- This module handles binds
+-- @module binds
+
 local utils = require("src.libs.utils")
 
 local binds = {}

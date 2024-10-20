@@ -1,3 +1,7 @@
+--- Utils Module
+-- This module has things that are util
+-- @module utils
+
 local utils = {}
 
 --- Validate types

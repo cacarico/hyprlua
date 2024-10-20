@@ -1,3 +1,7 @@
+--- Monitors Module
+-- This module handles monitor-related functionalities.
+-- @module monitors
+
 local monitors = {}
 
 monitors.list = {}
