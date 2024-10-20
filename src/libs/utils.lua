@@ -56,55 +56,93 @@ end
 
 --- Serialize the configuration table into a formatted string
 --- @param config (table) The configuration table to serialize
---- @param config_type (string) Representing the type or name of the configuration (e.g., "general")
+--- @param config_type (string) Representing the type or name of the configuration (e.g., "config")
 --- @return string Returns the serialized table
 function utils.serialize_config(config, config_type)
-	local serialized_lines = {}
-	local header_line = string.format("%s {", config_type)
-	table.insert(serialized_lines, header_line)
+    local serialized_lines = {}
+    local indent_char = "    "  -- 4 spaces for indentation
 
-	-- Recursive function to serialize nested tables
-	local function serialize_table(current_table, parent_key)
-		-- Collect all keys from the current table
-		local keys = {}
-		for key in pairs(current_table) do
-			table.insert(keys, key)
-		end
+    -- Helper function to add a line with proper indentation
+    local function add_line(line, indent_level)
+        local indent = indent_char:rep(indent_level)
+        table.insert(serialized_lines, indent .. line)
+    end
 
-		-- Sort the keys alphabetically for consistent ordering
-		table.sort(keys)
+    -- Start with the header
+    add_line(string.format("%s {", config_type), 0)
 
-		-- Iterate over each sorted key
-		for _, key in ipairs(keys) do
-			local value = current_table[key]
-			local full_key = parent_key and (parent_key .. "." .. key) or key
+    -- Recursive function to serialize nested tables
+    local function serialize_table(current_table, indent_level)
+        -- Collect and sort keys for consistent ordering
+        local keys = {}
+        for key in pairs(current_table) do
+            table.insert(keys, key)
+        end
+        table.sort(keys)
 
-			if type(value) == "table" then
-				-- Recursively serialize nested tables
-				serialize_table(value, full_key)
-			else
-				local serialized_value
+        for _, key in ipairs(keys) do
+            local value = current_table[key]
 
-				-- Determine how to serialize the value based on its type
-				if type(value) == "string" then
-					serialized_value = value
-				elseif type(value) == "number" or type(value) == "boolean" then
-					serialized_value = tostring(value)
-				else
-					serialized_value = "nil"
-				end
+            if key == "col" and type(value) == "table" then
+                -- Flatten the 'col' table by prefixing keys with 'col.'
+                local subkeys = {}
+                for subkey in pairs(value) do
+                    table.insert(subkeys, subkey)
+                end
+                table.sort(subkeys)
 
-				-- Add the serialized key-value pair to the lines
-				table.insert(serialized_lines, string.format("    %s = %s", full_key, serialized_value))
-			end
-		end
-	end
+                for _, subkey in ipairs(subkeys) do
+                    local subvalue = value[subkey]
+                    local full_key = "col." .. subkey
 
-	-- Serializes and
-	serialize_table(config)
-	table.insert(serialized_lines, "}")
+                    if type(subvalue) == "table" then
+                        -- Handle nested tables within 'col' if any
+                        add_line(string.format("%s = {", full_key), indent_level)
+                        serialize_table(subvalue, indent_level + 1)
+                        add_line("}", indent_level)
+                    else
+                        -- Serialize key-value pair
+                        local serialized_value
+                        if type(subvalue) == "string" then
+                            serialized_value = string.format('"%s"', subvalue)
+                        elseif type(subvalue) == "number" or type(subvalue) == "boolean" then
+                            serialized_value = tostring(subvalue)
+                        else
+                            serialized_value = "nil"
+                        end
+                        add_line(string.format("%s = %s", full_key, serialized_value), indent_level)
+                    end
+                end
+            else
+                if type(value) == "table" then
+                    -- For other tables, create a nested table
+                    add_line(string.format("%s = {", key), indent_level)
+                    serialize_table(value, indent_level + 1)
+                    add_line("}", indent_level)
+                else
+                    -- Serialize key-value pair
+                    local serialized_value
+                    if type(value) == "string" then
+                        serialized_value = string.format('"%s"', value)
+                    elseif type(value) == "number" or type(value) == "boolean" then
+                        serialized_value = tostring(value)
+                    else
+                        serialized_value = "nil"
+                    end
+                    add_line(string.format("%s = %s", key, serialized_value), indent_level)
+                end
+            end
+        end
+    end
 
-	return table.concat(serialized_lines, "\n")
+    -- Start serialization with initial indent level of 1
+    serialize_table(config, 1)
+
+    -- Close the main table
+    add_line("}", 0)
+
+    -- Combine all lines into a single string
+    return table.concat(serialized_lines, "\n")
 end
 
 return utils

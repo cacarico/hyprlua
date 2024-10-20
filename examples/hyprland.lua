@@ -1,3 +1,4 @@
+-- A simple configuration for hyprland using binds and monitors
 hyprlua.general.setup({
 	gaps_in = 30,
 	gaps_out = 20,

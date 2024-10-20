@@ -46,11 +46,12 @@ function monitors.write(file)
 
 			if #monitor.workspaces > 0 then
 				for _, workspace_name in pairs(monitor.workspaces) do
-          -- TODO: Being a default workspace is hardcoded now, make it so people can chose
-					local workspace_line = string.format("workspace = name:%s, monitor:%s, default:true\n", workspace_name, monitor.name)
+					-- TODO: Being a default workspace is hardcoded now, make it so people can chose
+					local workspace_line =
+						string.format("workspace = name:%s, monitor:%s, default:true\n", workspace_name, monitor.name)
 					file:write(workspace_line)
 				end
-        file:write("\n")
+				file:write("\n")
 			end
 		end
 	end

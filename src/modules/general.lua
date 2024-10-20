@@ -4,7 +4,7 @@
 
 local utils = require("src.libs.utils")
 local general = {}
-local serialized_config = {}
+local serialized_config
 
 general.defaults = {
 
@@ -63,7 +63,7 @@ function general.setup(opts)
 
 	utils.merge_tables(general.defaults, opts)
 	serialized_config = utils.serialize_config(general.defaults, "config")
-	print(serialized_config)
+	-- print(serialized_config)
 end
 
 function general.write(file)
