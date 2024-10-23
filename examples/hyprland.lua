@@ -7,11 +7,13 @@ hyprlua.general.setup({
 		active_border = "rgba(33ccffee) rgba(00ff99ee) 45deg",
 		inactive_border = "rgba(595959aa)",
 	},
-	resize_on_border = false,
-	allow_tearing = false,
 })
 
-hyprlua.decoration.setup()
+hyprlua.decoration.setup({
+	shadow_offset = false,
+	shadow_ignore_window = false,
+	drop_shadow = false,
+})
 
 hyprlua.binds.set("SUPER SHIFT", "h", "resizeactive", "-50 0", { flags = "e" })
 hyprlua.binds.set("SUPER SHIFT", "j", "resizeactive", "0 50", { flags = "e" })

@@ -1,9 +1,13 @@
 package = "hyprlua"
-version = "0.1-0"
+version = "0.1-2"
+
+rockspec_format = "3.0"
+
 source = {
     url = "git://github.com/cacarico/hyprlua.git",
-    tag = "v0.1.0",
+    tag = "v0.1.2",
 }
+
 description = {
     summary = "A CLI tool for generating Hyprland configurations using Lua.",
     detailed = "Hyprlua allows users to create Hyprland configuration files (`hyprland.conf`) using Lua scripts (`config.lua`). It simplifies configuration management by leveraging Lua's scripting capabilities.",
@@ -27,5 +31,15 @@ build = {
     },
     binaries = {
         ["hyprlua"] = "bin/hyprlua",
+    },
+}
+
+test = {
+    type = "shell",
+    commands = {
+        "lua -e \"package.path = './src/?.lua;' .. package.path\" tests/run_all_tests.lua"
+    },
+    dependencies = {
+        "luaunit >= 2.0.0"
     },
 }

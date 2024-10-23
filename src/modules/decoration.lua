@@ -19,11 +19,26 @@ local serialized_config
 -- @field shadow_range number The range of the shadow effect. Default is `4`.
 -- @field shadow_render_power number The power level of shadow rendering. Default is `3`.
 -- @field shadow_ignore_window boolean Whether shadows should ignore window decorations. Default is `true`.
+-- @field shadow_offset boolean Enable or disable shadow offsets. Default is `true`.
+-- @field shadow_scale string  Scaling factors for shadows. Default is `"0x0"`.
 -- @field col table Color settings for shadows.
 -- @field col.shadow string Hex color code for active shadows. Example: `"0xee1a1a1a"`.
 -- @field col.shadow_inactive string Hex color code for inactive shadows. Default is `"nil"`.
--- @field shadow_offset boolean Enable or disable shadow offsets. Default is `true`.
--- @field shadow_scale table Scaling factors for shadows. Default is `{ 0, 0 }`.
+-- @field blur table Blur settings.
+-- @field blur.brightness number Brightness level for blur. Default is `0.8172`.
+-- @field blur.contrast number Contrast level for blur. Default is `0.8916`.
+-- @field blur.enabled boolean Enable or disable blur effect. Default is `true`.
+-- @field blur.ignore_opacity boolean Whether to ignore opacity in blur. Default is `false`.
+-- @field blur.new_optimizations boolean Enable new optimizations for blur. Default is `true`.
+-- @field blur.noise number Noise level for blur. Default is `0.0117`.
+-- @field blur.passes number Number of blur passes. Default is `1`.
+-- @field blur.popups boolean Enable or disable blur for popups. Default is `false`.
+-- @field blur.popups_ignorealpha number Opacity to ignore for popups. Default is `0.3`.
+-- @field blur.size number Blur size. Default is `8`.
+-- @field blur.special boolean Special blur parameter. Default is `false`.
+-- @field blur.vibrancy number Vibrancy level for blur. Default is `0.1696`.
+-- @field blur.vibrancy_darkness number Vibrancy darkness level. Default is `0.0`.
+-- @field blur.xray boolean Enable xray effect in blur. Default is `false`.
 -- @field dim_inactive boolean Enable or disable dimming for inactive elements. Default is `false`.
 -- @field dim_strength number Strength of the dim effect. Default is `0.5`.
 -- @field dim_special number Special dimming parameter. Default is `0.2`.
@@ -31,25 +46,41 @@ local serialized_config
 -- @field screen_shader string Path or identifier for the screen shader. Default is `""`.
 
 decoration.defaults = {
-	rounding = 0,
 	active_opacity = 1.0,
-	inactive_opacity = 1.0,
-	fullscreen_opacity = 1.0,
-	drop_shadow = true,
-	shadow_range = 4,
-	shadow_render_power = 3,
-	shadow_ignore_window = true,
+	blur = {
+		brightness = 0.8172,
+		contrast = 0.8916,
+		enabled = true,
+		ignore_opacity = false,
+		new_optimizations = true,
+		noise = 0.0117,
+		passes = 1,
+		popups = false,
+		popups_ignorealpha = 0.3,
+		size = 8,
+		special = false,
+		vibrancy = 0.1696,
+		vibrancy_darkness = 0.0,
+		xray = false,
+	},
 	col = {
 		shadow = "0xee1a1a1a",
 		shadow_inactive = "nil",
 	},
-	shadow_offset = true,
-	shadow_scale = { 0, 0 },
-	dim_inactive = false,
-	dim_strength = 0.5,
-	dim_special = 0.2,
 	dim_around = 0.4,
+	dim_inactive = false,
+	dim_special = 0.2,
+	dim_strength = 0.5,
+	drop_shadow = true,
+	fullscreen_opacity = 1.0,
+	inactive_opacity = 1.0,
+	rounding = 0,
 	screen_shader = "",
+	shadow_ignore_window = true,
+	shadow_offset = true,
+	shadow_range = 4,
+	shadow_render_power = 3,
+	shadow_scale = "0x0",
 }
 
 --- Sets up the Decoration Module with user-provided options.
@@ -66,11 +97,16 @@ decoration.defaults = {
 --         shadow = "0xee000000",
 --     },
 -- })
-function decoration.setup(opts)
+function decoration.setup(opts, merge_defaults)
 	opts = opts or {}
-	utils.merge_tables(decoration.defaults, opts)
-	serialized_config = utils.serialize_config(decoration.defaults, "decoration")
-	print(serialized_config)
+
+	if merge_defaults and merge_defaults == true then
+		utils.merge_tables(decoration.defaults, opts)
+		serialized_config = utils.serialize_config(decoration.defaults, "decoration")
+	else
+		serialized_config = utils.serialize_config(opts, "decoration")
+	end
+	-- print(serialized_config)
 end
 
 --- Writes the serialized configuration to a file.
@@ -83,7 +119,7 @@ end
 -- file:close()
 function decoration.write(file)
 	if #serialized_config > 0 then
-		file:write("-- DECORATION CONFIGURATION\n")
+		file:write("# DECORATION CONFIGURATION\n")
 		file:write(serialized_config)
 		file:write("\n\n")
 	end

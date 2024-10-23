@@ -16,7 +16,7 @@ local colors = {
 	white = "\27[37m",
 }
 
--- Helper function to print colored messages
+--- Prints colored message
 local function print_colored(color, message)
 	print(color .. message .. colors.reset)
 end
