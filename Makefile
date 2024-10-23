@@ -4,7 +4,7 @@ example: ## Generates hyprlua examples
 	@bin/hyprlua -c examples/hyprland.lua -o examples/hyprland.conf
 
 docs-build: ## Generates documentation
-	@ldoc src/
+	@ldoc --config config.ld --dir docs/ src/
 
 lint: lint-lua ## Lint all files
 
