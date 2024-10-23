@@ -8,7 +8,7 @@ Hyprlua aims to end my frustration with configuring Hyprland using its configura
 
 This project currently supports only the features I use from Hyprland, suggestions and contributions are highly enouraged.
 Right now is needed to run hyprlua binary every time you change the config file.
-For the future it will be loaded as a plugin, I'm still preparing my mind going back to cpp...
+For the future it will be loaded as a plugin, I'm still preparing my mind to go back to cpp...
 
 ### Currently Supported Features
 - [x] Binds
