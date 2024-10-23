@@ -27,6 +27,13 @@ jobs:
 
       - name: Build docs
         run: make docs-build
+
+      - name: Upload artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
