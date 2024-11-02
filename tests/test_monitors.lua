@@ -16,15 +16,16 @@ end
 
 -- Test adding a monitor
 function TestMonitors.test_add_monitor()
-	monitors.add("Monitor1", "1920x1080@60Hz", "left", "1x1", { "Workspace1" })
+	monitors.add("Monitor1", "1920x1080@60Hz", "0x0", "1x1", { "Workspace1" })
+	monitors.add("Monitor1", "1920x1080@60Hz", "1920x0", "1x1", { "Workspace1" })
 
-	luaunit.assertEquals(#monitors.list, 1)
-	local monitor = monitors.list[1]
-	luaunit.assertEquals(monitor.name, "Monitor1")
-	luaunit.assertEquals(monitor.resolution, "1920x1080@60Hz")
-	luaunit.assertEquals(monitor.position, "left")
-	luaunit.assertEquals(monitor.scale, "1x1")
-	luaunit.assertEquals(monitor.workspaces, { "Workspace1" })
+	luaunit.assertEquals(#monitors.list, 2)
+	local first_monitor = monitors.list[1]
+	luaunit.assertEquals(first_monitor.name, "Monitor1")
+	luaunit.assertEquals(first_monitor.resolution, "1920x1080@60Hz")
+	luaunit.assertEquals(first_monitor.position, "0x0")
+	luaunit.assertEquals(first_monitor.scale, "1x1")
+	luaunit.assertEquals(first_monitor.workspaces, { "Workspace1" })
 end
 
 -- Create a LuaUnit instance and run the test suite

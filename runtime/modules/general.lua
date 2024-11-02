@@ -11,7 +11,6 @@ local serialized_config
 --- Default configuration options for the General Module.
 -- Users can override these defaults by passing a table of options to `general.setup`.
 --
--- @table general.defaults
 -- @field border_size number Size of the window borders. Default is `1`.
 -- @field no_border_on_floating boolean Disable borders on floating windows. Default is `false`.
 -- @field gaps_in number Inner gaps between windows. Default is `5`.
@@ -32,6 +31,7 @@ local serialized_config
 -- @field enabled boolean Enable snapping for floating window.
 -- @field window_gap number Minimum gap in pixels between windows before snapping
 -- @field monitor_gap number Minimum gap in pixels between window and monitor edges before snapping.
+-- @table general.defaults
 
 general.defaults = {
 	allow_tearing = false,

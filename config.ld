@@ -7,3 +7,4 @@ examples = {'./examples'}
 sort_modules=true
 file = './src'
 kind_names={topic='Manual',module='Libraries'}
+readme = "docs/readme.md"
