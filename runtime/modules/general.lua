@@ -4,7 +4,7 @@
 --
 -- @module general
 
-local utils = require("src.libs.utils")
+local utils = require("runtime.libs.utils")
 local general = {}
 local serialized_config
 

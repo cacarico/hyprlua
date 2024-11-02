@@ -6,7 +6,7 @@
 
 local binds = {}
 
-local utils = require("src.libs.utils")
+local utils = require("runtime.libs.utils")
 
 --- List of all defined keybindings.
 -- Each keybinding is a table containing modifiers, key, action, arguments, flags, and description.

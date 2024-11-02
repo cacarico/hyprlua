@@ -4,8 +4,8 @@
 -- Hyprlua CLI: Generate Hyprland configuration using Lua scripts.
 
 local argparse = require("argparse")
-local hyprlua = require("src.hyprlua")
-local logs = require("src.libs.logs")
+local hyprlua = require("runtime.hyprlua")
+local logs = require("runtime.libs.logs")
 
 -- Helper function to check if a file exists and is readable
 local function file_exists(path)
@@ -21,8 +21,8 @@ end
 local function main()
 	-- Initialize argument parser
 	local parser = argparse("hyprlua", "Generate Hyprland configuration using Lua.")
-  local default_hyprland_lua_file = "hyprland.lua"
-  local default_hyprlua_conf_file = "hyprlua.conf"
+	local default_hyprland_lua_file = "hyprland.lua"
+	local default_hyprlua_conf_file = "hyprlua.conf"
 
 	parser:option("-c --config", "Path to the config.lua file"):args(1):default(default_hyprland_lua_file)
 	parser:option("-o --output", "Path to the output hyprland.conf file"):args(1):default(default_hyprlua_conf_file)
@@ -55,7 +55,7 @@ local function main()
 		hyprlua = hyprlua,
 	}
 
-  setmetatable(env, { __index = _G })
+	setmetatable(env, { __index = _G })
 
 	-- Load config.lua as a chunk with the custom environment
 	local chunk, load_err = loadfile(config_file, "bt", env)

@@ -3,7 +3,7 @@
 --
 -- @module decoration
 
-local utils = require("src.libs.utils")
+local utils = require("runtime.libs.utils")
 local decoration = {}
 local serialized_config
 

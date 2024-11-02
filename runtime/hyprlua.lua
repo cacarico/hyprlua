@@ -2,11 +2,11 @@
 -- This library handles everything
 -- @module hyprlua
 
-local binds = require("src.modules.binds")
-local general = require("src.modules.general")
-local monitors = require("src.modules.monitors")
-local decoration = require("src.modules.decoration")
-local logs = require("src.libs.logs")
+local binds = require("runtime.modules.binds")
+local general = require("runtime.modules.general")
+local monitors = require("runtime.modules.monitors")
+local decoration = require("runtime.modules.decoration")
+local logs = require("runtime.libs.logs")
 
 local hyprlua = {
 	decoration = decoration,
