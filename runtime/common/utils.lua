@@ -1,6 +1,8 @@
 --- Utils Module
--- This module has things that are util
--- @module utils
+---This module has things that are util
+---@module utils
+
+local logs = require("runtime.common.logs")
 
 local utils = {}
 
@@ -25,7 +27,7 @@ function utils.validate(params)
 				end
 			end
 			if not valid_type then
-				error(
+				logs.error(
 					string.format(
 						"Parameter '%s' must be of type %s.",
 						param_name,
@@ -38,8 +40,8 @@ function utils.validate(params)
 end
 
 --- Merge tables
---- @param defaults (table) Default List
---- @param opts (table) User options
+---@param defaults (table) Default List
+---@param opts (table) User options
 function utils.merge_tables(defaults, opts)
 	if type(opts) ~= "table" then
 		return defaults
@@ -83,6 +85,7 @@ function utils.serialize_config(config, config_type)
 		for _, key in ipairs(keys) do
 			local value = current_table[key]
 
+			-- NOTE: This might have beed removed in recent update, consider removing...
 			if key == "col" and type(value) == "table" then
 				-- Flatten the 'col' table by prefixing keys with 'col.'
 				local subkeys = {}

@@ -54,7 +54,6 @@ local function main()
 	local env = {
 		hyprlua = hyprlua,
 	}
-
 	setmetatable(env, { __index = _G })
 
 	-- Load config.lua as a chunk with the custom environment

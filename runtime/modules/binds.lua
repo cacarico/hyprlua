@@ -1,51 +1,51 @@
---- Keybindings Module
--- This module provides functionality to define, manage, and persist keybindings.
--- Users can set keybindings with specific modifiers, keys, actions, and options.
---
--- @module binds
+--- Binds Module
+--- This module provides functionality to define, manage, and persist keybindings.
+--- Users can set keybindings with specific modifiers, keys, actions, and options.
+--- @module binds
+---
 
 local binds = {}
 
-local utils = require("runtime.libs.utils")
+local utils = require("runtime.common.utils")
 
 --- List of all defined keybindings.
--- Each keybinding is a table containing modifiers, key, action, arguments, flags, and description.
---
--- @table binds.list
+--- Each keybinding is a table containing modifiers, key, action, arguments, flags, and description.
+---
+--- @table binds.list
 binds.list = {}
 
 --- Default keys used in the keybinding system.
---
--- @table binds.default_keys
+---
+--- @table binds.default_keys
 binds.default_keys = {
 	"Return",
 	"Backspace",
 }
 
 --- Default options for keybindings.
--- These defaults are used when specific options are not provided during keybinding setup.
---
--- @table binds.default_options
--- @field flags string Flags for the bind (e.g., "MODIFIER"). Default is `""`.
--- @field description string Description of the bind action. Default is `""`.
+--- These defaults are used when specific options are not provided during keybinding setup.
+---
+--- @table binds.default_options
+--- @field flags string Flags for the bind (e.g., "MODIFIER"). Default is `""`.
+--- @field description string Description of the bind action. Default is `""`.
 binds.default_options = {
 	flags = "", -- Flags for the bind (e.g., "MODIFIER")
 	description = "", -- Description of the bind action
 }
 
 --- Sets a new keybinding.
--- Validates input parameters and inserts the new bind into the internal list.
---
--- @function binds.set
--- @param modifiers string The modifier keys (e.g., "Ctrl", "Alt").
--- @param key string The key to bind (e.g., "Return", "Backspace").
--- @param action string The action to perform when the keybinding is triggered.
--- @param arguments string|nil Optional arguments for the action. Default is `""`.
--- @param options table|nil Optional table containing `flags` and `description`.
--- @raise error If any input parameter is invalid or contains invalid flags.
---
--- @usage
--- binds.set("Ctrl", "C", "copy", nil, { flags = "c", description = "Copy selected text" })
+--- Validates input parameters and inserts the new bind into the internal list.
+---
+--- @function binds.set
+--- @param modifiers string The modifier keys (e.g., "Ctrl", "Alt").
+--- @param key string The key to bind (e.g., "Return", "Backspace").
+--- @param action string The action to perform when the keybinding is triggered.
+--- @param arguments string|nil Optional arguments for the action. Default is `""`.
+--- @param options table|nil Optional table containing `flags` and `description`.
+--- @raise error If any input parameter is invalid or contains invalid flags.
+---
+--- @usage
+--- binds.set("Ctrl", "C", "copy", nil, { flags = "c", description = "Copy selected text" })
 function binds.set(modifiers, key, action, arguments, options)
 	-- Ensure options is a table if provided, else use defaults
 	options = options or binds.default_options
@@ -92,15 +92,15 @@ function binds.set(modifiers, key, action, arguments, options)
 end
 
 --- Writes the current keybindings to a given file.
--- Formats each keybinding and writes it along with its description as comments.
---
--- @function binds.write
--- @param file userdata The file handle to write the keybindings to.
---
--- @usage
--- local file = io.open("keybindings.lua", "w")
--- binds.write(file)
--- file:close()
+--- Formats each keybinding and writes it along with its description as comments.
+---
+--- @function binds.write
+--- @param file file* The file handle to write the keybindings to.
+---
+--- @usage
+--- local file = io.open("keybindings.lua", "w")
+--- binds.write(file)
+--- file:close()
 function binds.write(file)
 	if #binds.list > 0 then
 		file:write("-- Keybindings Configuration\n")
@@ -123,11 +123,11 @@ function binds.write(file)
 end
 
 --- Resets the keybindings list by clearing all defined keybindings.
---
--- @function binds.reset
---
--- @usage
--- binds.reset()
+---
+--- @function binds.reset
+---
+--- @usage
+--- binds.reset()
 function binds.reset()
 	binds.list = {}
 end

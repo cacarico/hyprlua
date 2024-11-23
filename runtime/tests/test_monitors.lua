@@ -1,5 +1,5 @@
 local luaunit = require("luaunit")
-local monitors = require("modules.monitors")
+local monitors = require("runtime.modules.monitors")
 
 -- Reset function to clear monitors before each test
 local function reset_monitors()
