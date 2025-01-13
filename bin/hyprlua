@@ -26,6 +26,7 @@ local function main()
 
 	parser:option("-c --config", "Path to the config.lua file"):args(1):default(default_hyprland_lua_file)
 	parser:option("-o --output", "Path to the output hyprland.conf file"):args(1):default(default_hyprlua_conf_file)
+  parser.flag("-d --defaults", "Adds default Hyprlua configuration to file")
 	parser:flag("-v --verbose", "Enable verbose output")
 	parser:flag("-h --help", "Show help message")
 
@@ -33,6 +34,7 @@ local function main()
 	local args = parser:parse()
 
 	local config_file = args.config
+  local merge_defaults = args.defaults
 	local output_file = args.output
 	local verbose = args.verbose
 
@@ -44,9 +46,9 @@ local function main()
 	-- end
 
 	-- Validate config file existence
-	if not file_exists(config_file) then
-		logs.error(string.format("Error: Configuration file '%s' does not exist.", config_file))
-		os.exit(1)
+	if not file_exists(config_file) and not merge_defaults then
+      logs.error(string.format("Error: Configuration file '%s' does not exist, you can add -d to generate the default hyprlua configuration file.", config_file))
+      os.exit(1)
 	end
 	-- log_verbose(string.format("Found configuration file: %s", config_file))
 
