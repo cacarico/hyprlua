@@ -1,117 +1,59 @@
 #include "globals.hpp"
-#include <string>
-#include <cstring>
-#include <cerrno>
-#include <unistd.h>
-#include <sys/inotify.h>
-#include <fcntl.h>
-#include <chrono>
+#include "watcher.hpp"
 
+#include <filesystem>
+#include <string>
+#include <stdexcept>
+
+// Plugin API version function
 APICALL EXPORT std::string PLUGIN_API_VERSION() {
-    return HYPRLAND_API_VERSION;
+  return HYPRLAND_API_VERSION;
 }
 
 APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle) {
-    PHANDLE = handle;
+  PHANDLE = handle;
 
-    const std::string HASH = __hyprland_api_get_hash();
+  const std::string HASH = __hyprland_api_get_hash();
 
-    if (HASH != GIT_COMMIT_HASH) {
-        sendNotification(
-            "[Hyprlua] Mismatched headers! Can't proceed.",
-            CHyprColor{1.0, 0.2, 0.2, 1.0},
-            5000
+  if (HASH != GIT_COMMIT_HASH) {
+    sendNotification(
+        "[Hyprlua] Mismatched headers! Can't proceed.",
+        CHyprColor{1.0, 0.2, 0.2, 1.0},
+        5000
         );
-        throw std::runtime_error("[Hyprlua] Version mismatch");
-    }
+    throw std::runtime_error("[Hyprlua] Version mismatch");
+  }
 
-    // Start the file watcher thread
-    watcherThread = std::thread([](){
-        const std::string filepath = "/home/cacarico/ghq/github.com/cacarico/dotfiles-pvt/config/hypr/hyprland.lua";
-        const std::string directory = "/home/cacarico/ghq/github.com/cacarico/dotfiles-pvt/config/hypr/";
+  // Define the file and directory to watch
+  const std::string filepath = "/home/cacarico/ghq/github.com/cacarico/dotfiles-pvt/config/hypr/hyprland.lua";
+  std::filesystem::path filePathObj(filepath);
+  const std::string directory = filePathObj.parent_path().string();
 
-        int inotifyFd = inotify_init1(IN_NONBLOCK);
-        if (inotifyFd < 0) {
-            sendNotification(
-                "[Hyprlua] inotify_init1 error: " + std::string(std::strerror(errno)),
-                CHyprColor{1.0, 0.2, 0.2, 1.0},
-                5000
-            );
-            return;
-        }
+  // Initialize the FileWatcher
+  g_FileWatcher = std::make_unique<FileWatcher>(filepath, directory);
+  g_FileWatcher->start();
 
-        int watchDesc = inotify_add_watch(inotifyFd, directory.c_str(), IN_MODIFY | IN_CLOSE_WRITE | IN_MOVED_TO | IN_CREATE);
-        if (watchDesc < 0) {
-            sendNotification(
-                "[Hyprlua] Failed to add watch for " + directory + ": " + std::string(std::strerror(errno)),
-                CHyprColor{1.0, 0.2, 0.2, 1.0},
-                5000
-            );
-            close(inotifyFd);
-            return;
-        }
+  sendNotification(
+      "[Hyprlua] Plugin initialized successfully.",
+      CHyprColor{0.2, 0.6, 1.0, 1.0},
+      3000
+      );
 
-        sendNotification(
-            "[Hyprlua] Monitoring '" + filepath + "' for changes...",
-            CHyprColor{0.2, 1.0, 0.2, 1.0},
-            3000
-        );
-
-        auto lastEventTime = std::chrono::steady_clock::now() - std::chrono::seconds(1);
-
-        while (keepWatching) {
-            char buffer[4096] __attribute__((aligned(__alignof__(inotify_event))));
-            ssize_t numRead = read(inotifyFd, buffer, sizeof(buffer));
-
-            if (numRead > 0) {
-                for (char* ptr = buffer; ptr < buffer + numRead; ) {
-                    auto* event = reinterpret_cast<inotify_event*>(ptr);
-
-                    if (event->len > 0) {
-                        std::string eventFile = directory + event->name;
-
-                        if (eventFile == filepath) {
-                            auto now = std::chrono::steady_clock::now();
-                            if (now - lastEventTime > std::chrono::milliseconds(500)) {
-                                sendNotification("File was modified: " + filepath, CHyprColor{0.2, 0.6, 1.0, 1.0}, 3000);
-                                lastEventTime = now;
-                            }
-                        }
-                    }
-
-                    ptr += sizeof(inotify_event) + event->len;
-                }
-            } else if (numRead == -1 && errno != EAGAIN) {
-                // An error occurred
-                sendNotification(
-                    "[Hyprlua] read error: " + std::string(std::strerror(errno)),
-                    CHyprColor{1.0, 0.2, 0.2, 1.0},
-                    5000
-                );
-            }
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(500)); // Sleep to reduce CPU usage
-        }
-
-        inotify_rm_watch(inotifyFd, watchDesc);
-        close(inotifyFd);
-    });
-
-    return {"Hyprlua", "A plugin to enable lua support for Hyprland", "cacarico", "0.1"};
+  // Return the plugin description info
+  return {"Hyprlua", "A plugin to enable lua support for Hyprland", "cacarico", "0.1"};
 }
 
+// Plugin exit function
 APICALL EXPORT void PLUGIN_EXIT() {
-    // Signal the watcher thread to stop
-    keepWatching = false;
+  // Stop and clean up the watcher thread
+  if (g_FileWatcher) {
+    g_FileWatcher->stop();
+    g_FileWatcher.reset();
+  }
 
-    // Wait for the watcher thread to finish
-    if (watcherThread.joinable()) {
-        watcherThread.join();
-    }
-
-    sendNotification(
-        "[Hyprlua] Plugin exiting. Stopped file monitoring.",
-        CHyprColor{1.0, 1.0, 0.2, 1.0},
-        3000
-    );
+  sendNotification(
+      "[Hyprlua] Plugin exiting. Stopped file monitoring.",
+      CHyprColor{1.0, 1.0, 0.2, 1.0},
+      3000
+      );
 }
