@@ -30,7 +30,7 @@ build = {
 		["hyprlua.libs.logs"] = "src/libs/logs.lua",
 	},
 	binaries = {
-		["hyprlua"] = "bin/hyprlua",
+		["hyprlua"] = "bin/hyprluactl",
 	},
 }
 
