@@ -14,6 +14,7 @@ include_directories(${PIXMAN_INCLUDE_DIRS})
 
 add_library(hyprlua SHARED
     src/main.cpp
+    src/globals.cpp
     src/globals.hpp
 )
 
