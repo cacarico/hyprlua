@@ -3,7 +3,7 @@
 #include <string>
 #include <thread>
 #include <atomic>
-#include "globals.hpp" // For access to sendNotification and PHANDLE
+#include "globals.hpp"
 
 class FileWatcher {
 public:
