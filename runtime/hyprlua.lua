@@ -1,6 +1,6 @@
 --- Hyprlua Library
--- This library handles everything
--- @module hyprlua
+--- This library handles everything
+--- @module "hyprlua"
 
 local binds = require("runtime.modules.binds")
 local general = require("runtime.modules.general")
@@ -16,17 +16,17 @@ local hyprlua = {
 }
 
 --- Writes all module configurations to a specified file.
--- This function serializes each module's configuration and writes them sequentially to the provided file.
+--- This function serializes each module's configuration and writes them sequentially to the provided file.
 --
--- @function hyprlua.write_to_file
--- @param file_path string The path to the file where configurations will be saved.
--- @return boolean `true` if the operation succeeds, otherwise `false` along with an error message.
+--- @function hyprlua.write_to_file
+--- @param file_path string The path to the file where configurations will be saved.
+--- @return boolean `true` if the operation succeeds, otherwise `false` along with an error message.
 --
--- @usage
--- local success, err = hyprlua.write_to_file("config.lua")
--- if not success then
---     print("Error writing configurations:", err)
--- end
+--- @usage
+--- local success, err = hyprlua.write_to_file("config.lua")
+--- if not success then
+---     print("Error writing configurations:", err)
+--- end
 function hyprlua.write_to_file(file_path)
 	-- Attempt to open the file in write mode
 	local file, err = io.open(file_path, "w")
@@ -44,7 +44,7 @@ function hyprlua.write_to_file(file_path)
 	return true
 end
 
--- Function to reset all configurations
+--- Function to reset all configurations
 function hyprlua.reset_config()
 	-- Reset binds
 	binds.reset()
