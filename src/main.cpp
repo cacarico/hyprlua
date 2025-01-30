@@ -1,59 +1,101 @@
 #include "globals.hpp"
 #include "watcher.hpp"
+#include "utils.hpp"
 
 #include <filesystem>
 #include <string>
 #include <stdexcept>
+#include <iostream> // Logging
+#include <cstdlib>  // getenv()
 
-// Plugin API version function
+/**
+ * @file main.cpp
+ * @brief Main implementation of Hyprlua plugin for Hyprland compositor
+ * @details Contains plugin initialization/teardown logic and core functionality
+ */
+
+/// @brief Color for error notifications (red)
+const CHyprColor ERROR_COLOR = {1.0, 0.2, 0.2, 1.0};
+/// @brief Color for success notifications (blue)
+const CHyprColor SUCCESS_COLOR = {0.2, 0.6, 1.0, 1.0};
+/// @brief Display duration for error notifications (5 seconds)
+const int ERROR_TIMEOUT = 5000;
+/// @brief Display duration for success notifications (3 seconds)
+const int SUCCESS_TIMEOUT = 3000;
+
+/**
+ * @brief Get plugin API version
+ * @return HYPRLAND_API_VERSION as defined by Hyprland
+ * @note Required entry point for Hyprland plugins
+ */
 APICALL EXPORT std::string PLUGIN_API_VERSION() {
-  return HYPRLAND_API_VERSION;
+    return HYPRLAND_API_VERSION;
 }
 
+/**
+ * @brief Initialize the Hyprlua plugin
+ * @param handle Hyprland API handle provided by the compositor
+ * @return PLUGIN_DESCRIPTION_INFO containing plugin metadata
+ * @throws std::runtime_error On version mismatch or initialization failure
+ * @details Performs:
+ * 1. API version validation
+ * 2. Environment configuration parsing
+ * 3. File watcher initialization
+ * 4. Initial notification setup
+ *
+ * @note Uses HYPRLUA_CONFIG_PATH environment variable for config location
+ */
 APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle) {
-  PHANDLE = handle;
+    try {
+        PHANDLE                = handle;
+        const std::string HASH = __hyprland_api_get_hash();
 
-  const std::string HASH = __hyprland_api_get_hash();
+        // Validate API compatibility
+        if (HASH != GIT_COMMIT_HASH) {
+            sendNotification("[Hyprlua] Mismatched headers! Can't proceed.", ERROR_COLOR, ERROR_TIMEOUT);
+            throw std::runtime_error("[Hyprlua] Version mismatch");
+        }
 
-  if (HASH != GIT_COMMIT_HASH) {
-    sendNotification(
-        "[Hyprlua] Mismatched headers! Can't proceed.",
-        CHyprColor{1.0, 0.2, 0.2, 1.0},
-        5000
-        );
-    throw std::runtime_error("[Hyprlua] Version mismatch");
-  }
+        // Handle config path resolution
+        const char* configPathEnv = std::getenv("HYPRLUA_CONFIG_PATH");
+        std::string filepath      = configPathEnv ? configPathEnv : "~/.config/hypr/hyprland.lua";
+        filepath                  = expandTilde(filepath);
 
-  // Define the file and directory to watch
-  const std::string filepath = "/home/cacarico/ghq/github.com/cacarico/dotfiles-pvt/config/hypr/hyprland.lua";
-  std::filesystem::path filePathObj(filepath);
-  const std::string directory = filePathObj.parent_path().string();
+        // Set up filesystem monitoring
+        std::filesystem::path filePathObj(filepath);
+        const std::string     directory = filePathObj.parent_path().string();
 
-  // Initialize the FileWatcher
-  g_FileWatcher = std::make_unique<FileWatcher>(filepath, directory);
-  g_FileWatcher->start();
+        // Initialize file watcher
+        g_FileWatcher = std::make_unique<FileWatcher>(filepath, directory);
+        if (!g_FileWatcher) {
+            throw std::runtime_error("[Hyprlua] Failed to allocate FileWatcher");
+        }
 
-  sendNotification(
-      "[Hyprlua] Plugin initialized successfully.",
-      CHyprColor{0.2, 0.6, 1.0, 1.0},
-      3000
-      );
+        g_FileWatcher->start();
+        sendNotification("[Hyprlua] Plugin initialized successfully.", SUCCESS_COLOR, SUCCESS_TIMEOUT);
 
-  // Return the plugin description info
-  return {"Hyprlua", "A plugin to enable lua support for Hyprland", "cacarico", "0.1"};
+        return {"Hyprlua", "A plugin to enable Lua support for Hyprland", "cacarico", "0.1"};
+    } catch (const std::exception& e) {
+        std::cerr << "[Hyprlua] Initialization error: " << e.what() << std::endl;
+        return {"Hyprlua", "Initialization failed", "cacarico", "0.1"};
+    }
 }
 
-// Plugin exit function
+/**
+ * @brief Clean up plugin resources
+ * @details Performs:
+ * 1. File watcher termination
+ * 2. Resource deallocation
+ * 3. Final status notification
+ * @note Guarantees safe shutdown even if exceptions occur
+ */
 APICALL EXPORT void PLUGIN_EXIT() {
-  // Stop and clean up the watcher thread
-  if (g_FileWatcher) {
-    g_FileWatcher->stop();
-    g_FileWatcher.reset();
-  }
+    try {
+        if (g_FileWatcher) {
+            g_FileWatcher->stop();
+            g_FileWatcher.reset();
+        }
 
-  sendNotification(
-      "[Hyprlua] Plugin exiting. Stopped file monitoring.",
-      CHyprColor{1.0, 1.0, 0.2, 1.0},
-      3000
-      );
+        sendNotification("[Hyprlua] Plugin exiting. Stopped file monitoring.", SUCCESS_COLOR, SUCCESS_TIMEOUT);
+    } catch (const std::exception& e) { std::cerr << "[Hyprlua] Error during exit: " << e.what() << std::endl; }
 }

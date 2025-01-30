@@ -1,7 +1,7 @@
 all: example docs-build lint-lua ## Builds examples, docs and runs lints.
 
 clean: ## Clear build files
-	@rm -rf build
+	@rm -rf build .cache
 
 build: clean ## Builds Hyprlua
 	@mkdir build

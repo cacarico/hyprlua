@@ -23,6 +23,8 @@ add_library(hyprlua SHARED
   src/globals.hpp
   src/watcher.cpp
   src/watcher.hpp
+  src/utils.cpp
+  src/utils.hpp
 )
 
 # Include the src directory for header files

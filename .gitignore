@@ -1,5 +1,6 @@
 *.rock
 docs/!CNAME
 docs/
+docs_c/
 build/
 .cache/
