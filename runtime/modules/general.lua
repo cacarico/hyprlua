@@ -1,8 +1,8 @@
 --- General Module
--- This module handles general configurations for the application.
--- Users can override these defaults by passing a table of options to `general.setup`.
---
--- @module general
+--- This module handles general configurations for the application.
+--- Users can override these defaults by passing a table of options to `general.setup`.
+---
+--- @module "general"
 
 local utils = require("runtime.libs.utils")
 local general = {}

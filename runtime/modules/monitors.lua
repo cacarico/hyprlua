@@ -1,6 +1,7 @@
 --- Monitors Module
--- This module handles monitor-related functionalities.
--- @module monitors
+--- This module handles monitor-related functionalities.
+---
+--- @module "monitors"
 
 local monitors = {}
 

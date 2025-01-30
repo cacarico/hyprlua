@@ -1,7 +1,6 @@
 --- Decoration Module
 --- This module handles decorations and blur effects.
---
---- @module decoration
+--- @module "decoration"
 
 local utils = require("runtime.libs.utils")
 local decoration = {}
@@ -9,8 +8,7 @@ local serialized_config
 
 --- Default configuration options for the Decoration Module.
 --- Users can override these defaults by passing a table of options to `decoration.setup`.
---
---- @table decoration.defaults
+---@class decoration.defaults
 --- @field rounding number The corner rounding radius. Default is `0`.
 --- @field active_opacity number Opacity when active. Range: `0.0` to `1.0`. Default is `1.0`.
 --- @field inactive_opacity number Opacity when inactive. Range: `0.0` to `1.0`. Default is `1.0`.
@@ -44,7 +42,6 @@ local serialized_config
 --- @field dim_special number Special dimming parameter. Default is `0.2`.
 --- @field dim_around number Dim amount around elements. Default is `0.4`.
 --- @field screen_shader string Path or identifier for the screen shader. Default is `""`.
-
 decoration.defaults = {
 	active_opacity = 1.0,
 	blur = {

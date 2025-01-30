@@ -21,10 +21,14 @@ local function print_colored(color, message)
 	print(color .. message .. colors.reset)
 end
 
+--- Logs error message
+---@param message any
 function logs.error(message)
 	print_colored(colors.red, message)
 end
 
+--- Logs a message
+---@param message any
 function logs.print(message)
 	print_colored(colors.white, message)
 end
