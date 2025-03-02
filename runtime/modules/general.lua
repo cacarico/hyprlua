@@ -2,7 +2,7 @@
 --- This module handles general configurations for the application.
 --- Users can override these defaults by passing a table of options to `general.setup`.
 ---
---- @module "general"
+--- @module 'general'
 
 local utils = require("runtime.libs.utils")
 local general = {}
@@ -11,27 +11,27 @@ local serialized_config
 --- Default configuration options for the General Module.
 -- Users can override these defaults by passing a table of options to `general.setup`.
 --
--- @field border_size number Size of the window borders. Default is `1`.
--- @field no_border_on_floating boolean Disable borders on floating windows. Default is `false`.
--- @field gaps_in number Inner gaps between windows. Default is `5`.
--- @field gaps_out number Outer gaps between windows and the screen edges. Default is `20`.
--- @field gaps_workspaces number Gaps specific to workspaces. Default is `0`.
--- @field col table Color settings.
--- @field col.active_border string Hex color code for active window borders. Example: `"0xffffffff"`.
--- @field col.inactive_border string Hex color code for inactive window borders. Default is `"0xff444444"`.
--- @field col.nogroup_border string Hex color code for borders when no group is present. Default is `"0xffffaaff"`.
--- @field col.nogroup_border_active string Hex color code for active borders when no group is present. Default is `"0xffff00ff"`.
--- @field layout string Layout algorithm for window tiling. Default is `"dwindle"`.
--- @field no_focus_fallback boolean Disable fallback focus behavior. Default is `false`.
--- @field resize_on_border boolean Enable resizing windows by dragging borders. Default is `false`.
--- @field extend_border_grab_area number Extends the area for grabbing window borders. Default is `15`.
--- @field hover_icon_on_border boolean Show icons when hovering over borders. Default is `true`.
--- @field allow_tearing boolean Allow screen tearing. Default is `false`.
--- @field resize_corner number Size of the resize corner area. Default is `0`.
--- @field enabled boolean Enable snapping for floating window.
--- @field window_gap number Minimum gap in pixels between windows before snapping
--- @field monitor_gap number Minimum gap in pixels between window and monitor edges before snapping.
--- @table general.defaults
+--- @class general.defaults
+--- @field border_size number Size of the window borders. Default is `1`.
+--- @field no_border_on_floating boolean Disable borders on floating windows. Default is `false`.
+--- @field gaps_in number Inner gaps between windows. Default is `5`.
+--- @field gaps_out number Outer gaps between windows and the screen edges. Default is `20`.
+--- @field gaps_workspaces number Gaps specific to workspaces. Default is `0`.
+--- @field col table Color settings.
+--- @field col.active_border string Hex color code for active window borders. Example: `"0xffffffff"`.
+--- @field col.inactive_border string Hex color code for inactive window borders. Default is `"0xff444444"`.
+--- @field col.nogroup_border string Hex color code for borders when no group is present. Default is `"0xffffaaff"`.
+--- @field col.nogroup_border_active string Hex color code for active borders when no group is present. Default is `"0xffff00ff"`.
+--- @field layout string Layout algorithm for window tiling. Default is `"dwindle"`.
+--- @field no_focus_fallback boolean Disable fallback focus behavior. Default is `false`.
+--- @field resize_on_border boolean Enable resizing windows by dragging borders. Default is `false`.
+--- @field extend_border_grab_area number Extends the area for grabbing window borders. Default is `15`.
+--- @field hover_icon_on_border boolean Show icons when hovering over borders. Default is `true`.
+--- @field allow_tearing boolean Allow screen tearing. Default is `false`.
+--- @field resize_corner number Size of the resize corner area. Default is `0`.
+--- @field enabled boolean Enable snapping for floating window.
+--- @field window_gap number Minimum gap in pixels between windows before snapping
+--- @field monitor_gap number Minimum gap in pixels between window and monitor edges before snapping.
 
 general.defaults = {
 	allow_tearing = false,

@@ -30,39 +30,4 @@ function monitors.disable(name)
 	table.insert(monitors.disabled, name)
 end
 
---- Saves monitors to file
---- @param file (file*) A path to the configuration file to save
-function monitors.write(file)
-	if #monitors.list > 0 then
-		file:write("# MONITORS\n")
-		for _, monitor in pairs(monitors.list) do
-			local monitor_line = string.format(
-				"monitor = %s, %s, %s, %s\n",
-				monitor.name,
-				monitor.resolution,
-				monitor.position,
-				monitor.scale
-			)
-			file:write(monitor_line)
-
-			if #monitor.workspaces > 0 then
-				for _, workspace_name in pairs(monitor.workspaces) do
-					-- TODO: Being a default workspace is hardcoded now, make it so people can chose
-					local workspace_line =
-						string.format("workspace = name:%s, monitor:%s, default:true\n", workspace_name, monitor.name)
-					file:write(workspace_line)
-				end
-				file:write("\n")
-			end
-		end
-	end
-
-	if #monitors.disabled > 0 then
-		for disabled_monitor in monitors.disabled do
-			local disabled_monitor_line = string.format("monitor = %s, disabled\n", disabled_monitor.name)
-			file:write(disabled_monitor_line)
-		end
-	end
-end
-
 return monitors
