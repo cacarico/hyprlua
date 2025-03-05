@@ -6,7 +6,6 @@
 
 local utils = require("runtime.libs.utils")
 local general = {}
-local serialized_config
 
 --- Default configuration options for the General Module.
 -- Users can override these defaults by passing a table of options to `general.setup`.
@@ -78,31 +77,9 @@ function general.setup(opts, merge_defaults)
 
 	if merge_defaults and merge_defaults == true then
 		-- Merge user options into the defaults
-		utils.merge_tables(general.defaults, opts)
-		-- Serialize the merged configuration with the module name "general"
-		serialized_config = utils.serialize_config(general.defaults, "general")
-	else
-		-- Serialize only the user-provided options with the module name "general"
-		serialized_config = utils.serialize_config(opts, "general")
+		utils.merge_tables(opts, general.defaults)
 	end
 end
 
---- Saves the general configuration to a file.
--- Writes the serialized configuration to the provided file handle.
---
--- @function general.write
--- @param file userdata The file handle to write the configuration to. Typically obtained via `io.open`.
---
--- @usage
--- local file = io.open("config.lua", "w")
--- general.write(file)
--- file:close()
-function general.write(file)
-	if serialized_config and #serialized_config > 0 then
-		file:write("# GENERAL\n")
-		file:write(serialized_config)
-		file:write("\n\n")
-	end
-end
-
+--- Saves the general configurat
 return general

@@ -91,45 +91,4 @@ function binds.set(modifiers, key, action, arguments, options)
 	})
 end
 
---- Writes the current keybindings to a given file.
----Formats each keybinding and writes it along with its description as comments.
----
----@function binds.write
----@param file userdata The file handle to write the keybindings to.
----
----@usage
----local file = io.open("keybindings.lua", "w")
----binds.write(file)
----file:close()
-function binds.write(file)
-	if #binds.list > 0 then
-		file:write("-- Keybindings Configuration\n")
-		for _, bind in ipairs(binds.list) do
-			local bind_line = string.format(
-				'bind%s = { modifiers = "%s", key = "%s", action = "%s", arguments = "%s" }\n',
-				bind.flags ~= "" and bind.flags or "",
-				bind.modifiers,
-				bind.key,
-				bind.action,
-				bind.arguments
-			)
-			file:write(bind_line)
-			if bind.description ~= "" then
-				file:write("-- " .. bind.description .. "\n")
-			end
-		end
-		file:write("\n")
-	end
-end
-
---- Resets the keybindings list by clearing all defined keybindings.
----
----@function binds.reset
----
----@usage
----binds.reset()
-function binds.reset()
-	binds.list = {}
-end
-
 return binds

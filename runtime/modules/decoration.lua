@@ -1,17 +1,17 @@
---- Decoration Module
+--- Decoration
 --- This module handles decorations and blur effects.
 ---
 --- @module 'decoration'
 
-local log = require("runtime.common.logs")
-local utils = require("runtime.libs.utils")
+local utils = require("runtime.common.utils")
+
 local decoration = {}
-local serialized_config
+local user_options = {}
 
 --- Default configuration options for the decoration module.
 --- users can override these defaults by passing a table of options to `decoration.setup`.
 ---
---- @class defaults.decoration
+--- @class decoration.options
 --- @field active_opacity (number) Opacity when active. Range: `0.0` to `1.0`. Default is `1.0`.
 --- @field dim_around (number) Dim amount around elements. Default is `0.4`.
 --- @field dim_inactive (boolean) Enable or disable dimming for inactive elements. Default is `false`.
@@ -21,57 +21,29 @@ local serialized_config
 --- @field inactive_opacity (number) Opacity when inactive. Range: `0.0` to `1.0`. Default is `1.0`.
 --- @field rounding (number) The corner rounding radius. Default is `0`.
 --- @field screen_shader (string) Path or identifier for the screen shader. Default is `""`.
-defaults.decoration = {
+decoration.options = {
 	active_opacity = 1.0,
-	blur = {
-		brightness = 0.8172,
-		contrast = 0.8916,
-		enabled = true,
-		ignore_opacity = false,
-		new_optimizations = true,
-		noise = 0.0117,
-		passes = 1,
-		popups = false,
-		popups_ignorealpha = 0.3,
-		size = 8,
-		special = false,
-		vibrancy = 0.1696,
-		vibrancy_darkness = 0.0,
-		xray = false,
-	},
-	col = {
-		shadow = "0xee1a1a1a",
-		shadow_inactive = "nil",
-	},
 	dim_around = 0.4,
 	dim_inactive = false,
 	dim_special = 0.2,
 	dim_strength = 0.5,
-	drop_shadow = true,
 	fullscreen_opacity = 1.0,
 	inactive_opacity = 1.0,
 	rounding = 0,
 	screen_shader = "",
-	shadow_ignore_window = true,
-	shadow_offset = true,
-	shadow_range = 4,
-	shadow_render_power = 3,
-	shadow_scale = "0x0",
 }
 
---- Sets up the Decoration Module with user-provided options.
---
+--- Sets up the decoration module with user-provided options.
+---
 --- This function merges user-provided options with the default configuration.
---
---- @param opts (table) A table of options to apply. See `decoration.defaults` for available options.
---
+---
+--- @param opts (table|nil) a table of options to apply. see `decoration.defaults` for available options.
+--- @param merge_defaults (boolean|nil) merge defaults table with user provided options
+---
 --- @usage
 --- decoration.setup({
 ---     rounding = 10,
 ---     active_opacity = 0.9,
----     col = {
----         shadow = "0xee000000",
----     },
 --- })
 function decoration.setup(opts, merge_defaults)
 	user_options.decoration = opts or {}
@@ -79,13 +51,12 @@ function decoration.setup(opts, merge_defaults)
 	if merge_defaults == true then
 		utils.merge_tables(user_options.decoration, user_options.decoration)
 	end
-	log.debug(serialized_config)
 end
 
 --- Default blur options for the decoration module.
 --- users can override these defaults by passing a table of options to `decoration.setup`.
 ---
---- @class defaults.blur
+--- @class decoration.options.blur
 --- @field brightness (number) Brightness level for blur. Default is `0.8172`.
 --- @field contrast (number) Contrast level for blur. Default is `0.8916`.
 --- @field enabled (boolean) Enable or disable blur effect. Default is `true`.
@@ -100,7 +71,7 @@ end
 --- @field vibrancy (number) Vibrancy level for blur. Default is `0.1696`.
 --- @field vibrancy_darkness (number) Vibrancy darkness level. Default is `0.0`.
 --- @field xray (boolean) Enable xray effect in blur. Default is `false`.
-defaults.blur = {
+decoration.options.blur = {
 	brightness = 0.8172,
 	contrast = 0.8916,
 	enabled = true,
@@ -133,14 +104,14 @@ function decoration.blur(opts, merge_defaults)
 	opts = opts or {}
 
 	if merge_defaults and merge_defaults == true then
-		utils.merge_tables(defaults.decoration, opts)
+		utils.merge_tables(opts, decoration.options.blur)
 	end
 end
 
 --- Default shadow options for the decoration module.
 --- users can override these defaults by passing a table of options to `decoration.setup`.
 ---
---- @class defaults.shadow
+--- @class decoraion.options.shadow
 --- @field enabled (boolean) Enable drop shadows on windows
 --- @field range (number) Shadow range (“size”) in layout px
 --- @field render_power (number) In what power to render the falloff (more power, the faster the falloff) [1 - 4]
@@ -150,7 +121,7 @@ end
 --- @field color_inactive (string) Inactive shadow color. (if not set, will fall back to color)
 --- @field offset (string) Shadow’s rendering offset
 --- @field scale (number) Shadow’s scale. [0.0 - 1.0]
-defaults.shadow = {
+decoration.options.shadow = {
 	enabled = true,
 	range = 4,
 	render_power = 3,
@@ -190,9 +161,8 @@ function decoration.shadow(opts, merge_defaults)
 	else
 		opts = {}
 	end
-
 	if merge_defaults and merge_defaults == true then
-		utils.merge_tables(defaults.decoration, opts)
+		utils.merge_tables(opts, decoration.options.shadow)
 	end
 end
 

@@ -20,11 +20,10 @@ find_package(Threads REQUIRED)
 add_library(hyprlua SHARED
   src/main.cpp
   src/globals.cpp
-  src/globals.hpp
   src/watcher.cpp
-  src/watcher.hpp
   src/utils.cpp
-  src/utils.hpp
+  src/LuaEngine/lua_engine.cpp
+  src/LuaEngine/monitors.cpp
 )
 
 # Include the src directory for header files
