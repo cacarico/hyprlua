@@ -1,31 +1,33 @@
-name: Build Docs
+name: build docs
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
 jobs:
   build:
-    name: Build docs
+    name: build docs
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: checkout
         uses: actions/checkout@v3
 
-      - name: Setup Lua
+      - name: setup lua
         uses: leafo/gh-actions-lua@v8
         with:
-          luaVersion: 5.4
+          luaversion: 5.4
 
-      - name: Setup Lua Rocks
+      - name: setup lua rocks
         uses: leafo/gh-actions-luarocks@v4
 
-      - name: Setup dependencies
+      - name: setup dependencies
         run: luarocks install ldoc
 
-      - name: Build docs
+      - name: build docs
         run: make docs-build
 
-      - name: Upload artifact
+      - name: upload artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
@@ -41,6 +43,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
+      - name: deploy to github pages
         id: deployment
         uses: actions/deploy-pages@v4

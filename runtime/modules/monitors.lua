@@ -1,33 +1,63 @@
 --- Monitors Module
---- This module handles monitor-related functionalities.
----
 --- @module "monitors"
+--- Handles monitor-related configuration before runtime apply.
 
-local monitors = {}
+local M = {}
 
-monitors.list = {}
-monitors.disabled = {}
+-- Internal state
+local _queue = {}
+local _disabled = {}
 
---- Adds a monitor and optionally associates workspaces to it
---- @param name (string) The name of the monitor, can also be the description (eg. desc:Chimei Innolux Corporation 0x150C)
---- @param resolution (string) The resolution for the given monitor 1920x1080@60.01Hz
---- @param position (string) The position where the monitor will be displayed (eg. 0x0)
---- @param scale (string) The scale for the monitor (eg. 1)
---- @param workspaces (table) A list of workspaces that should be attached to this monitor
-function monitors.add(name, resolution, position, scale, workspaces)
-	table.insert(monitors.list, {
+--- Adds a monitor configuration to the apply queue.
+--- @param name string: Monitor identifier (e.g. "desc:LG Electronics 0x1234")
+--- @param resolution string: Monitor resolution and refresh (e.g. "1920x1080@60.00Hz")
+--- @param position string: Screen position (e.g. "0x0")
+--- @param scale string: Monitor scaling factor (e.g. "1.0")
+--- @param workspaces table: Optional list of workspaces assigned to this monitor
+function M.add(name, resolution, position, scale, workspaces)
+	assert(type(name) == "string", "Monitor name must be a string")
+	assert(type(resolution) == "string", "Resolution must be a string")
+	assert(type(position) == "string", "Position must be a string")
+	assert(type(scale) == "string", "Scale must be a string")
+	assert(workspaces == nil or type(workspaces) == "table", "Workspaces must be a table or nil")
+
+	table.insert(_queue, {
 		name = name,
 		resolution = resolution,
 		position = position,
 		scale = scale,
-		workspaces = workspaces,
+		workspaces = workspaces or {},
 	})
 end
 
---- Disable a monitor
---- @param name (table) A list of monitors to disable
-function monitors.disable(name)
-	table.insert(monitors.disabled, name)
+--- Marks a monitor for disabling.
+--- @param name string: The monitor name or description to disable
+function M.disable(name)
+	assert(type(name) == "string", "Monitor name must be a string")
+	table.insert(_disabled, name)
 end
 
-return monitors
+--- Applies all configured monitors and disabled ones using C++ bridge.
+function M.apply()
+	for _, m in ipairs(_queue) do
+		-- luacheck: push ignore 113
+		if __hypr_add_monitor then
+			__hypr_add_monitor(m.name, m.resolution, m.position, m.scale, m.workspaces)
+		-- luacheck: pop
+		else
+			error("__hypr_add_monitor is not defined in Lua runtime")
+		end
+	end
+
+	for _, name in ipairs(_disabled) do
+		-- luacheck: push ignore 113
+		if __hypr_disable_monitor then
+			__hypr_disable_monitor(name)
+		-- luacheck: pop
+		else
+			error("__hypr_disable_monitor is not defined in Lua runtime")
+		end
+	end
+end
+
+return M
