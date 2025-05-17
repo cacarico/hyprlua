@@ -1,6 +1,6 @@
 --- Hyprlua Library
 --- This library handles everything
---- @module "hyprlua"
+--- @module hyprlua
 
 local binds = require("runtime.modules.binds")
 local general = require("runtime.modules.general")
