@@ -45,7 +45,7 @@ namespace hyprlua::modules {
         rule.scale    = static_cast<float>(scale);
         rule.disabled = false;
 
-        auto monitor = g_pCompositor->getMonitorFromName("WAYLAND-1");
+        auto monitor = g_pCompositor->getMonitorFromName(name);
         if (!monitor) {
             log::error("Monitor not found: " + name);
             std::cerr << "[hyprlua] Monitor not found: " << name << "\n";
