@@ -1,6 +1,7 @@
 #include "globals.hpp"
 #include "watcher.hpp"
 #include "utils.hpp"
+#include "lua/runtime.hpp"
 
 #include <filesystem>
 #include <string>
@@ -50,11 +51,11 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle) {
         PHANDLE                = handle;
         const std::string HASH = __hyprland_api_get_hash();
 
-        // Validate API compatibility
-        if (HASH != GIT_COMMIT_HASH) {
-            sendNotification("[Hyprlua] Mismatched headers! Can't proceed.", ERROR_COLOR, ERROR_TIMEOUT);
-            throw std::runtime_error("[Hyprlua] Version mismatch");
-        }
+        // // Validate API compatibility
+        // if (HASH != GIT_COMMIT_HASH) {
+        //     sendNotification("[Hyprlua] Mismatched headers! Can't proceed.", ERROR_COLOR, ERROR_TIMEOUT);
+        //     throw std::runtime_error("[Hyprlua] Version mismatch");
+        // }
 
         // Handle config path resolution
         const char* configPathEnv = std::getenv("HYPRLUA_CONFIG_PATH");
@@ -73,6 +74,8 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle) {
 
         g_FileWatcher->start();
         sendNotification("[Hyprlua] Plugin initialized successfully.", SUCCESS_COLOR, SUCCESS_TIMEOUT);
+
+        hyprlua::init_lua_runtime("/home/cacarico/ghq/github.com/cacarico/hyprlua/runtime/modules/", "/home/cacarico/.config/hypr/hyprland.lua");
 
         return {"Hyprlua", "A plugin to enable Lua support for Hyprland", "cacarico", "0.1"};
     } catch (const std::exception& e) {

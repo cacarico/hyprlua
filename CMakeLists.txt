@@ -8,13 +8,21 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Generate compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Add Hyprland subproject (no default targets)
+add_subdirectory(extern/Hyprland EXCLUDE_FROM_ALL)
+
+# Required system includes (e.g. libdrm)
+include_directories(/usr/include/libdrm)
+
 # Find PkgConfig and Pixman
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PIXMAN REQUIRED pixman-1)
-include_directories(${PIXMAN_INCLUDE_DIRS})
 
-# Find Threads package for threading support
+# Find Threads
 find_package(Threads REQUIRED)
+
+# Find Lua >= 5.3 using pkg-config
+pkg_check_modules(LUA REQUIRED lua>=5.3)
 
 # Add the plugin as a shared library
 add_library(hyprlua SHARED
@@ -22,17 +30,29 @@ add_library(hyprlua SHARED
   src/globals.cpp
   src/watcher.cpp
   src/utils.cpp
-  src/LuaEngine/lua_engine.cpp
-  src/LuaEngine/monitors.cpp
+  src/lua/runtime.cpp
+  src/lua/monitors.cpp
 )
 
-# Include the src directory for header files
-target_include_directories(hyprlua PRIVATE src/)
+# Include directories
+target_include_directories(hyprlua PRIVATE
+  src/
+  ${PIXMAN_INCLUDE_DIRS}
+  ${LUA_INCLUDE_DIRS}
+  extern/Hyprland/
+  extern/Hyprland/protocols/
+  extern/Hyprland/subprojects/wlroots/include/
+  extern/Hyprland/subprojects/hyprland-protocols/include/
+)
 
-# Link against pixman and Threads
-target_link_libraries(hyprlua PRIVATE ${PIXMAN_LIBRARIES} Threads::Threads)
+# Link against required libraries
+target_link_libraries(hyprlua PRIVATE
+  ${PIXMAN_LIBRARIES}
+  ${LUA_LIBRARIES}
+  Threads::Threads
+)
 
-# Optionally, set the output directory for the compiled library
+# Output directory for the compiled plugin
 set_target_properties(hyprlua PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build
+  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build
 )

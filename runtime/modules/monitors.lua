@@ -18,7 +18,7 @@ function M.add(name, resolution, position, scale, workspaces)
 	assert(type(name) == "string", "Monitor name must be a string")
 	assert(type(resolution) == "string", "Resolution must be a string")
 	assert(type(position) == "string", "Position must be a string")
-	assert(type(scale) == "string", "Scale must be a string")
+	assert(type(scale) == "number", "Scale must be a number")
 	assert(workspaces == nil or type(workspaces) == "table", "Workspaces must be a table or nil")
 
 	table.insert(_queue, {
@@ -28,36 +28,33 @@ function M.add(name, resolution, position, scale, workspaces)
 		scale = scale,
 		workspaces = workspaces or {},
 	})
+
+	-- luacheck: push ignore 113
+	if __hypr_add_monitor then
+		__hypr_add_monitor(name, resolution, position, scale, workspaces)
+		-- luacheck: pop
+	else
+		error("__hypr_add_monitor is not defined in Lua runtime")
+	end
 end
 
 --- Marks a monitor for disabling.
 --- @param name string: The monitor name or description to disable
 function M.disable(name)
 	assert(type(name) == "string", "Monitor name must be a string")
+
 	table.insert(_disabled, name)
-end
 
---- Applies all configured monitors and disabled ones using C++ bridge.
-function M.apply()
-	for _, m in ipairs(_queue) do
-		-- luacheck: push ignore 113
-		if __hypr_add_monitor then
-			__hypr_add_monitor(m.name, m.resolution, m.position, m.scale, m.workspaces)
+	-- luacheck: push ignore 113
+	if __hypr_disable_monitor then
+		__hypr_disable_monitor(name)
 		-- luacheck: pop
-		else
-			error("__hypr_add_monitor is not defined in Lua runtime")
-		end
-	end
-
-	for _, name in ipairs(_disabled) do
-		-- luacheck: push ignore 113
-		if __hypr_disable_monitor then
-			__hypr_disable_monitor(name)
-		-- luacheck: pop
-		else
-			error("__hypr_disable_monitor is not defined in Lua runtime")
-		end
+	else
+		error("__hypr_disable_monitor is not defined in Lua runtime")
 	end
 end
 
+-- luacheck: push ignore 112
+hypr.monitors = M
+-- luacheck: pop
 return M

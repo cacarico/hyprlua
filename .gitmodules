@@ -1,0 +1,3 @@
+[submodule "extern/Hyprland"]
+	path = extern/Hyprland
+	url = https://github.com/cacarico/hyprland
