@@ -1,5 +1,7 @@
 # Hyprlua
 
+Hyprland now supports lua natively. This project is not maintained anymore.
+
 A Hyprland plugin that embeds a Lua 5.4 runtime, allowing you to configure Hyprland via `~/.config/hypr/hyprland.lua` instead of the native config format.
 
 ## Usage
